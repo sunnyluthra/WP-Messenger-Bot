@@ -1,4 +1,4 @@
-=== Facebook Messenger Bot For WordPress ===
+=== WP Messenger Bot ===
 Tags: facebook, messenger, bot
 Requires at least: 4.5
 Tested up to: 4.5
