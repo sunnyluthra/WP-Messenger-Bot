@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Facebook Messenger Bot For WordPress
+Plugin Name: WP Messenger Bot
 Description: Convert your WordPress site to an awesomely amazing bot.
 Plugin URI: https://gruppo.io
 Author: Sunny Luthra
