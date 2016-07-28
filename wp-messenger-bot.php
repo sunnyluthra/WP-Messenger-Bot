@@ -109,7 +109,8 @@ if (!class_exists('Gruppo_Messenger_Bot')):
 		private function includes() {
 
 			require_once GMB_PLUGIN_DIR . 'libs/cpt.php';
-			require_once GMB_PLUGIN_DIR . 'libs/carbon-fields/carbon-fields-plugin.php';
+			require_once GMB_PLUGIN_DIR . 'libs/tgm/class-tgm-plugin-activation.php';
+			// require_once GMB_PLUGIN_DIR . 'libs/carbon-fields/carbon-fields-plugin.php';
 
 			require_once GMB_PLUGIN_DIR . 'includes/endpoints.php';
 			require_once GMB_PLUGIN_DIR . 'includes/post-types.php';
@@ -128,6 +129,8 @@ if (!class_exists('Gruppo_Messenger_Bot')):
 			GMB()->data_source = new GMB_Data_Source();
 
 			add_action('admin_enqueue_scripts', array($this, 'admin_style'));
+			add_action('tgmpa_register', array($this, 'register_required_plugins'));
+
 		}
 		/**
 		 * Include admin css.
@@ -138,6 +141,44 @@ if (!class_exists('Gruppo_Messenger_Bot')):
 		 */
 		function admin_style() {
 			wp_enqueue_style(GMB()->prefix . 'admin-style', GMB_PLUGIN_URL . 'assets/css/grid.css');
+		}
+
+		/**
+		 * Required Plugins
+		 */
+		function register_required_plugins() {
+			$plugins = array(
+				array(
+					'name' => 'Carbon Fields',
+					'slug' => 'carbon-fields',
+					'required' => true,
+				),
+			);
+			$config = array(
+				'id' => 'gruppo-bot', // Unique ID for hashing notices for multiple instances of TGMPA.
+				'default_path' => '', // Default absolute path to bundled plugins.
+				'menu' => 'tgmpa-install-plugins', // Menu slug.
+				'parent_slug' => 'plugins.php', // Parent menu slug.
+				'capability' => 'manage_options', // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
+				'has_notices' => true, // Show admin notices or not.
+				'dismissable' => true, // If false, a user cannot dismiss the nag message.
+				'dismiss_msg' => '', // If 'dismissable' is false, this message will be output at top of nag.
+				'is_automatic' => false, // Automatically activate plugins after installation or not.
+				'message' => '', // Message to output right before the plugins table.
+				'strings' => array(
+					'page_title' => __('Install Required Plugins', 'gruppo-bot'),
+					'menu_title' => __('Install Plugins', 'gruppo-bot'),
+					'installing' => __('Installing Plugin: %s', 'gruppo-bot'),
+					'updating' => __('Updating Plugin: %s', 'gruppo-bot'),
+					'oops' => __('Something went wrong with the plugin API.', 'gruppo-bot'),
+					'notice_can_install_required' => _n_noop(
+						'This plugin requires the following plugin: %1$s.',
+						'This plugin requires the following plugins: %1$s.',
+						'gruppo-bot'
+					),
+				),
+			);
+			tgmpa($plugins, $config);
 		}
 	}
 endif;
